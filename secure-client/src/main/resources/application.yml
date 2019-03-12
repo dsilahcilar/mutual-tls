@@ -1,0 +1,8 @@
+client:
+  ssl:
+    cert-file: client.crt
+    pem-file: client.pem
+proxy:
+  host: localhost
+  schema: https
+  port: 8443

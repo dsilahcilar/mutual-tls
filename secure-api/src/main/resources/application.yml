@@ -1,0 +1,22 @@
+# Define a custom port (instead of the default 8080)
+server:
+  port: 8443
+# The format used for the keystore
+  ssl:
+    key-store-type: PKCS12
+    # The path to the keystore containing the certificate
+    key-store: classpath:keyStore.p12
+    # The password used to generate the certificate
+    key-store-password: changeme
+    #Trust store that holds SSL certificates.
+    trust-store: classpath:trustStore.jks
+    # Password used to access the trust store.
+    trust-store-password: changeme
+    # Type of the trust store.
+    trust-store-type: JKS
+    # Whether client authentication is wanted ("want") or needed ("need").
+    client-auth: need
+
+client:
+  user: deniz-silahcilar
+
