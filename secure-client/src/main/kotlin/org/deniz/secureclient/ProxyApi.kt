@@ -5,6 +5,7 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.servlet.HandlerMapping
 import reactor.netty.http.client.HttpClient
 import java.net.URI
 import java.net.URISyntaxException
@@ -12,16 +13,15 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @RestController
-@RequestMapping("/")
 class ProxyApi(private val httpClient: HttpClient, private val prop: ProxyProperties) {
 
-    @RequestMapping("{path}")
+    @RequestMapping("/**")
     @Throws(URISyntaxException::class)
     fun proxy(@RequestBody(required = false) body: String?, method: HttpMethod,
-              @PathVariable path: String,
               request: HttpServletRequest,
               httpServletResponse: HttpServletResponse) {
-        val redirectURI = URI(prop.schema.value, null, prop.host, prop.port.toInt(), "/$path", request.queryString, null)
+        val path = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE) as String
+        val redirectURI = URI(prop.schema.value, null, prop.host, prop.port.toInt(), path, request.queryString, null)
         val client = WebClient.builder().clientConnector(ReactorClientHttpConnector(httpClient))
                 .baseUrl(redirectURI.toASCIIString()).build()
                 .method(method)
