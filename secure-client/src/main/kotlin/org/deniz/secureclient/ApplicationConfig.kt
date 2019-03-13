@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ClassPathResource
-import reactor.netty.http.client.HttpClient
+import reactor.ipc.netty.http.client.HttpClient
 import java.io.File
 
 @Configuration
@@ -22,9 +22,9 @@ class ApplicationConfig {
                 .forClient()
                 .keyManager(certFile, keyFile)
                 .trustManager(InsecureTrustManagerFactory.INSTANCE)
-                //     .trustManager(trustCertCollection)
                 .build()
-        return HttpClient.create().secure { t -> t.sslContext(sslContext) }
+        return HttpClient.builder().options { opts -> opts.sslContext(sslContext) }
+                .build()
     }
 
     fun getFile(fileName: String): File {

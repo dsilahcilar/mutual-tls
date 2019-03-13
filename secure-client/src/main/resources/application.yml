@@ -2,7 +2,15 @@ client:
   ssl:
     cert-file: client.crt
     pem-file: client.pem
-proxy:
-  host: localhost
-  schema: https
-  port: 8443
+
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: secure-api
+        uri: https://localhost:8443
+        predicates:
+        - Path=/**
+        filters:
+        - AddRequestHeader=X-Request-Foo, Bar
+        - AddResponseHeader=X-Response-Foo, Bar
